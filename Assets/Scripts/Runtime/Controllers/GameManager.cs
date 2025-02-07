@@ -141,11 +141,7 @@ namespace Runtime.Controllers
         
 
         [Foldout("Main Music"), SerializeField] private AudioClip winSound;
-
         
-        
-
-
         [Foldout("Touches"), SerializeField] private Touch[] _touches;
         [Foldout("Touches"), SerializeField] private GameObject[] vfxPrefabs, fingers;
 
@@ -172,7 +168,7 @@ namespace Runtime.Controllers
         private AudioSource _audioSource;
         private void Start()
         {
-            _audioSource = gameObject.AddComponent<AudioSource>();
+            _audioSource = gameObject.GetComponent<AudioSource>();
         }
 
         private void Update()
@@ -323,7 +319,10 @@ namespace Runtime.Controllers
                 _audioSource.PlayOneShot(winSound);
             }
 
-            yield return new WaitForSeconds(3f); // 3 saniye bekle
+            yield return new WaitForSeconds(0.5f);
+            _audioSource.PlayOneShot(winSound);
+            
+            yield return new WaitForSeconds(1f); // 3 saniye bekle
 
             // 🎆 Patlama efekti ve yok etme
             InstantiateExplosion(finalSelectedVfx.transform.position);
@@ -332,8 +331,7 @@ namespace Runtime.Controllers
             // 🎵 Müziği durdur
             _audioSource.Stop();
         }
-
-
+        
         private void InstantiateExplosion(Vector3 position)
         {
             if (explosionPrefab != null)
@@ -347,8 +345,7 @@ namespace Runtime.Controllers
                 }
             }
         }
-
-
+        
         private void ResetCountdown()
         {
             if (countdownStarted)
