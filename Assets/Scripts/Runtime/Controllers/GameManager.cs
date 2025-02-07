@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -17,6 +18,8 @@ namespace Runtime.Controllers
         [Foldout("Selection"), SerializeField] private bool selecting = false;
         [Foldout("Selection"), SerializeField] private float selectionTime, speedDecreaseFactor, currentSpeed, scaleFactor;
         [Foldout("Selection"), SerializeField] private int selectionCycles;
+        
+        [Foldout("Dictionary")] public Dictionary<int, GameObject> FingerDictionary = new Dictionary<int, GameObject>();
 
         private void Update()
         {
@@ -30,6 +33,8 @@ namespace Runtime.Controllers
                 for (int i = 0; i < touchCount; i++)
                 {
                     _touches[i] = Input.GetTouch(i);
+                    Touch touch = _touches[i];
+                    int fingerId = touch.fingerId;
 
                     switch (_touches[i].phase)
                     {
@@ -43,22 +48,30 @@ namespace Runtime.Controllers
                                 var main = particle.main;
                                 main.startColor = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
                             }
-                            
-                            if (fingers == null || fingers.Length < touchCount)
+
+                            if (!FingerDictionary.ContainsKey(fingerId))
                             {
-                                System.Array.Resize(ref fingers, touchCount);
+                                FingerDictionary.Add(fingerId, newVfx);
                             }
-                            
-                            fingers[i] = newVfx;
                             break;
                         case TouchPhase.Ended:
-                                Destroy(fingers[i]);
-                                fingers[i] = null;
+                            if (FingerDictionary.TryGetValue(fingerId, out GameObject obj))
+                            {
+                                Destroy(obj);
+                                FingerDictionary.Remove(fingerId);
+                            }
                             break;
                         case TouchPhase.Stationary:
+                            
+                            break;
+                        case TouchPhase.Canceled:
+                            if (FingerDictionary.TryGetValue(fingerId, out GameObject obj2))
+                            {
+                                Destroy(obj2);
+                                FingerDictionary.Remove(fingerId);
+                            }
                             break;
                     }
-                    Debug.Log(_touches[i].phase);
                 }
             }
             else
@@ -67,6 +80,7 @@ namespace Runtime.Controllers
                 {
                     Destroy(finger);
                 }
+                FingerDictionary.Clear();
             }
         }
 
