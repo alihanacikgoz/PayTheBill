@@ -351,6 +351,7 @@ GameObject:
   - component: {fileID: 1393971363}
   - component: {fileID: 1393971362}
   - component: {fileID: 1393971364}
+  - component: {fileID: 1393971365}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -375,22 +376,21 @@ MonoBehaviour:
   - {fileID: 5060532187062204901, guid: f0c68d0cd57b347f68e03d4fbd2f97d9, type: 3}
   fingers: []
   countdownVfx:
-  - {fileID: 9011801954167385116, guid: 978da13c8717b4604897eac5acd61ae3, type: 3}
-  - {fileID: 5015709480220675725, guid: cf742d0926cb349adaade864463bda77, type: 3}
   - {fileID: 1887653854968319736, guid: 26357614a18304e1a8ea17a61da695c2, type: 3}
+  - {fileID: 5015709480220675725, guid: cf742d0926cb349adaade864463bda77, type: 3}
+  - {fileID: 9011801954167385116, guid: 978da13c8717b4604897eac5acd61ae3, type: 3}
   - {fileID: 3472069931874965287, guid: fdecee9e1e4204410828a49af200d65c, type: 3}
   countdownTime: 0
   countdownStarted: 0
   selecting: 0
   selectionMusic: {fileID: 8300000, guid: 64a26bde95de647d5acc7e5b3481b59e, type: 3}
   highlightSound: {fileID: 8300000, guid: c26f83bde621c4ee08d3a82c83502231, type: 3}
-  selectionTime: 5
-  speedDecreaseFactor: 0.9
-  currentSpeed: 150
-  scaleFactor: 1.1
-  selectionCycles: 5
+  selectionTime: 2
+  startDelay: 0.1
+  maxDelay: 1.5
+  growthFactor: 1.5
   explosionPrefab: {fileID: 7424557220607367563, guid: f533bc376a9b446138dba7513bbc9461, type: 3}
-  explosionSound: {fileID: 8300000, guid: c6982b388bf834ce8843cf942033fb97, type: 3}
+  explosionSound: {fileID: 8300000, guid: f4bab984f186d48209bca24130d0d8cf, type: 3}
 --- !u!4 &1393971363
 Transform:
   m_ObjectHideFlags: 0
@@ -503,6 +503,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1393971365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393971361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c358b5143ea4a5293c882c840fad6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
