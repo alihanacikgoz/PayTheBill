@@ -34,7 +34,7 @@ namespace Runtime.Controllers
 
         [Foldout("Selection"), SerializeField] private bool selecting = false;
         [Foldout("Selection"), SerializeField] private AudioClip selectionMusic;
-        [Foldout("Selection"), SerializeField] private AudioClip highlightSound;
+        [Foldout("Selection"), SerializeField] private AudioClip highlightSound, deepHorn;
 
         [Foldout("Selection"), SerializeField]
         private float selectionTime = 5f, startDelay = 0.1f, maxDelay = 1.5f, growthFactor = 1.5f;
@@ -60,14 +60,18 @@ namespace Runtime.Controllers
         private AudioSource _audioSource;
 
         #endregion
-
-
+        
         private void Start()
         {
             _audioSource = gameObject.GetComponent<AudioSource>();
         }
 
         private void Update()
+        {
+            TouchControler();
+        }
+
+        private void TouchControler()
         {
             int touchCount = Input.touchCount;
 
@@ -163,7 +167,7 @@ namespace Runtime.Controllers
 
             // GO yazan particle'ı instantiate et
             var go = Instantiate(countdownVfx[3], Vector3.zero, Quaternion.identity);
-            _audioSource.PlayOneShot(highlightSound);
+            _audioSource.PlayOneShot(deepHorn);
             yield return new WaitForSeconds(1.5f);
             Destroy(go);
 
@@ -231,7 +235,7 @@ namespace Runtime.Controllers
                 _audioSource.PlayOneShot(explosionSound);
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
             Destroy(finalSelectedVfx);
 
             _audioSource.Stop();
@@ -242,7 +246,7 @@ namespace Runtime.Controllers
             if (explosionPrefab != null)
             {
                 var destructionPrefab = Instantiate(explosionPrefab, position, Quaternion.Euler(90, 0, 0));
-                Destroy(destructionPrefab, 3f);
+                Destroy(destructionPrefab, 5f);
             }
         }
 

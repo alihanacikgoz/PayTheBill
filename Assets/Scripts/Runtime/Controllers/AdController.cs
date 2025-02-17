@@ -1,25 +1,31 @@
 using System;
-using System.Collections.Generic;
-using GoogleMobileAds;
+using System.Collections;
 using GoogleMobileAds.Api;
+using NaughtyAttributes;
 using UnityEngine;
 using AdRequest = GoogleMobileAds.Api.AdRequest;
 
+
 namespace Runtime.Controllers
 {
+    
     public class AdController : MonoBehaviour
     {
-        #region Singleton
+        #region Variables
+
+        [Foldout("Ad Counter"), SerializeField] private float countdownTime;
+        [Foldout("Ad Counter"), SerializeField] private float initialTime;
 
         private BannerView _bannerView;
         private InterstitialAd _interstitialAd;
+        private bool _isPremium ;
 
 #if UNITY_ANDROID
-        private string _adBannerId = "ca-app-pub-3940256099942544/6300978111";
-        private string _adInterstitialId = "ca-app-pub-3940256099942544/1033173712";
+        private string _adBannerId = "ca-app-pub-6309338851156090/5923370973";
+        private string _adInterstitialId = "ca-app-pub-6309338851156090/5806948769";
 #elif UNITY_IPHONE
-        private string _adBannerId = "ca-app-pub-3940256099942544/2934735716";
-        private string _adInterstitialId = "ca-app-pub-3940256099942544/4411468910";
+        private string _adBannerId = "ca-app-pub-6309338851156090/8280498049";
+        private string _adInterstitialId = "ca-app-pub-6309338851156090/4588665049";
 #else
         private string _adBannerId = "unexpected_platform";
         private string _adInterstitialId = "unexpected_platform";
@@ -31,6 +37,8 @@ namespace Runtime.Controllers
 
         private void Awake()
         {
+            CheckPremium();
+            initialTime = countdownTime;
             MobileAds.Initialize((InitializationStatus initStatus) => { });
         }
 
@@ -40,10 +48,20 @@ namespace Runtime.Controllers
             CreateInterstitialAd();
             ShowInterstitialAd();
             ListenToBannerAdEvents();
+        }
+        
+        private void Update()
+        {
             ListenToInterstitialAdEvents();
         }
-
+        
         #endregion
+        
+        
+        private void CheckPremium()
+        {
+            gameObject.GetComponent<AdController>().enabled = !_isPremium? true: false;
+        }
 
         #region BannerView Methods
 
@@ -159,7 +177,11 @@ namespace Runtime.Controllers
 
             _interstitialAd.OnAdFullScreenContentClosed += () =>
             {
+                Time.timeScale = 1;
                 Debug.Log("Interstitial ad full screen content closed.");
+                CreateInterstitialAd();
+                StartCoroutine(IntersitialCountdownCoroutine());
+                countdownTime = initialTime;
             };
 
             _interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
@@ -168,6 +190,16 @@ namespace Runtime.Controllers
             };
         }
 
+        #endregion
+        
+        #region Countdown Coroutine Methods
+
+        private IEnumerator IntersitialCountdownCoroutine()
+        {
+            yield return new WaitForSeconds(countdownTime);
+            ShowInterstitialAd();
+        }
+        
         #endregion
     }
 }
